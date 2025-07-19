@@ -1,113 +1,57 @@
 #!/usr/bin/env python
 #guide.py
 
+
 from constants import *
 from utils import *
-import pygame
 import math
 import gear
-from functools import partial
-import pygame
-from tkinter import simpledialog
-import tkinter as tk
 
 
-class Button(pygame.sprite.Sprite):
+
+class Button:
+    pass  # UI logic removed; placeholder for compatibility if needed
+
     """
-    Represents a clickable button in the UI.
-    """
-    def __init__(self, text, x, y, width, height, callback, font_size, font_color, outline_color, fill_color):
-        super().__init__()
-        self.image = pygame.Surface([width, height])
-        self.image.fill(outline_color)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.text = text
-        self.callback = callback
-        self.font = pygame.font.Font(None, font_size)
-        self.text_surface = self.font.render(text, True, font_color)
-        W = self.text_surface.get_width()
-        H = self.text_surface.get_height()
-        pygame.draw.rect(self.image, fill_color, (x + 2, y + 2, width - 4, height - 4))
-        self.image.blit(self.text_surface, [width // 2 - W // 2, height // 2 - H // 2])
-
-    def click(self, args=()):
-        """Invoke the button's callback."""
-        self.callback(*args)
-
-#pygame.init()
-
-class SpiroGuide:
-    """
-    Represents the main spirograph guide/canvas and manages gears and UI.
-    Handles drawing, user input, and gear management.
+    Pure logic for spirograph simulation, gear management, and speed control.
+    No drawing or UI code.
     """
     def __init__(self, width, height, padding, radius, speed, center=(0, 0)):
-        # Use defaults if any argument is None
         from constants import DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_PADDING, DEFAULT_RADIUS, DEFAULT_CENTERX, DEFAULT_CENTERY
         width = width if width is not None else DEFAULT_WIDTH
         height = height if height is not None else DEFAULT_HEIGHT
         padding = padding if padding is not None else DEFAULT_PADDING
         radius = radius if radius is not None else DEFAULT_RADIUS
         center = center if center != (0, 0) else (DEFAULT_CENTERX, DEFAULT_CENTERY)
-        self.surface = pygame.display.set_mode((width, height))
-        self.graph_surface = pygame.Surface((width, height), pygame.SRCALPHA)
-        self.ui_surface = pygame.Surface((width, height))
-        self.ui_visible = False
-        self.ui_value = 1
-        self.tkroot = tk.Tk()
-        self.tkroot.withdraw()
         self.radius = radius - padding
         self.center = center
         self.gears = []
         self.speed = speed
-        self.buttons = pygame.sprite.Group()
-        self.ui_buttons = pygame.sprite.Group()
-        buttons = [
-            Button('Add gear', 700, 10, 80, 30, self.ui_show, 16, WHITE, BLUE, GREY),
-            Button('Remove gear', 700, 50, 80, 30, self.remove_gear, 16, WHITE, BLUE, GREY),
-            Button('Clear', 700, 90, 80, 30, self.clear, 16, WHITE, BLUE, GREY)
-        ]
-        ui_buttons = [
-            Button('X', 470, 100, 30, 30, self.ui_hide, 20, GREY, BLACK, RED),
-            Button('+', 400, 120, 50, 50, self.ui_plus, 24, GREEN, BLACK, GREY),
-            Button('-', 400, 180, 50, 50, self.ui_minus, 24, BLUE, BLACK, GREY)
-        ]
-        for button in buttons:
-            self.buttons.add(button)
-        for button in ui_buttons:
-            self.ui_buttons.add(button)
+        # Simulation speed control (slider logic, no UI)
+        self.slider_min = 2  # FPS should not drop below ~2
+        self.slider_max = 1000
+        self._set_slider_pos_from_speed()
+    def _set_slider_pos_from_speed(self):
+        # Logic placeholder: set slider position from speed (no UI)
+        rel = (self.speed - self.slider_min) / (self.slider_max - self.slider_min)
+        self.slider_pos = rel
+
+    def set_speed_from_slider(self, rel):
+        # Set the speed based on slider position (0.0 to 1.0)
+        rel = max(0, min(1, rel))
+        self.speed = int(self.slider_min + rel * (self.slider_max - self.slider_min))
+        self._set_slider_pos_from_speed()
 
     def clear(self):
-        """Clear all gears and the drawing surface."""
+        """Clear all gears."""
         self.gears = []
-        self.graph_surface.fill((0, 0, 0, 0))
 
     def remove_gear(self):
         """Remove the most recently added gear."""
         if len(self.gears) > 0:
             self.gears.pop(-1)
 
-    def ui_show(self):
-        """Show the UI widget for gear/hole selection."""
-        self.ui_visible = True
-
-    def ui_hide(self):
-        """Hide the UI widget and add a gear with the selected value."""
-        self.ui_visible = False
-        self.add_gear(0, self.ui_value)
-        self.ui_value = 1
-
-    def ui_plus(self):
-        """Increase the UI value (number of holes)."""
-        if self.ui_value < 10:
-            self.ui_value += 1
-
-    def ui_minus(self):
-        """Decrease the UI value (number of holes)."""
-        if self.ui_value > 1:
-            self.ui_value -= 1
+    # UI methods removed
 
     def add_gear(self, gear_radius, hole_count):
         """Add a new gear with the specified radius and number of holes."""
@@ -120,53 +64,17 @@ class SpiroGuide:
         self.gears.append(gear.SpiroGear(self, radius=gear_radius, center=gear_center))
         self.gears[-1].add_random_holes(hole_count)
 
-    def click(self, pos):
-        """Handle mouse click events for UI and buttons."""
-        if self.ui_visible:
-            buttons = self.ui_buttons
-        else:
-            buttons = self.buttons
-        for button in buttons:
-            if button.rect.collidepoint(*pos):
-                button.click()
 
-    def key_press(self, key):
-        """Handle key press events for speed adjustment."""
-        if key == pygame.K_UP:
-            self.speed_change('up')
-        if key == pygame.K_DOWN:
-            self.speed_change('down')
-
-    def draw(self):
-        """Draw the guide, gears, and UI elements."""
-        self.surface.fill((0, 0, 0))
-        font = pygame.font.Font(None, 36)
-        if self.ui_visible:
-            pygame.draw.rect(self.ui_surface, GREY, (350, 100, 150, 150))
-            self.ui_buttons.draw(self.ui_surface)
-            self.ui_surface.blit(font.render(str(self.ui_value), True, RED), (350, 150))
-            self.surface.blit(self.ui_surface, (0, 0))
-        else:
-            if len(self.gears) > 0:
-                for gear in self.gears:
-                    gear.draw(self.surface, self.graph_surface)
-            self.surface.blit(self.graph_surface, (0, 0))
-            pygame.draw.circle(self.surface, (255, 255, 255), self.center, self.radius, 2)
-            self.buttons.draw(self.surface)
-            fps_info = font.render(f'FPS: {int(self.speed)}', True, (255, 255, 255))
-            self.surface.blit(fps_info, (5, 5))
-        pygame.display.flip()
-
+    # All UI, drawing, and event handling removed. Only pure logic remains.
     def update(self):
-        """Update the state of all gears and redraw the guide."""
+        """Update the state of all gears (advance simulation by one step)."""
         for gear in self.gears:
             gear.rotate()
-        self.draw()
 
     def speed_change(self, value):
-        """Change the speed of the guide's update loop."""
+        """Change the speed of the guide's update loop (logic only)."""
         if value == 'up':
             self.speed += 10
         elif value == 'down':
             self.speed -= 10
-        self.speed = max(1, min(1000, self.speed))
+        self.speed = max(self.slider_min, min(self.slider_max, self.speed))
