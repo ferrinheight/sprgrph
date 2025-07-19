@@ -44,6 +44,13 @@ class SpiroGuide:
     Handles drawing, user input, and gear management.
     """
     def __init__(self, width, height, padding, radius, speed, center=(0, 0)):
+        # Use defaults if any argument is None
+        from constants import DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_PADDING, DEFAULT_RADIUS, DEFAULT_CENTERX, DEFAULT_CENTERY
+        width = width if width is not None else DEFAULT_WIDTH
+        height = height if height is not None else DEFAULT_HEIGHT
+        padding = padding if padding is not None else DEFAULT_PADDING
+        radius = radius if radius is not None else DEFAULT_RADIUS
+        center = center if center != (0, 0) else (DEFAULT_CENTERX, DEFAULT_CENTERY)
         self.surface = pygame.display.set_mode((width, height))
         self.graph_surface = pygame.Surface((width, height), pygame.SRCALPHA)
         self.ui_surface = pygame.Surface((width, height))
@@ -112,8 +119,6 @@ class SpiroGuide:
         gear_center = rotate_point_in_circle(center=self.center, point=gear_center, angle_velocity=randint(0, 360))
         self.gears.append(gear.SpiroGear(self, radius=gear_radius, center=gear_center))
         self.gears[-1].add_random_holes(hole_count)
-        print('gear center: {}'.format(self.gears[-1].center))
-        print('gear holes: {}'.format(','.join([str(h.center) for h in self.gears[-1].holes])))
 
     def click(self, pos):
         """Handle mouse click events for UI and buttons."""

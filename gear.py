@@ -42,7 +42,9 @@ class SpiroGear:
     """
     def __init__(self, parent, radius=10, center=(0, 0), holes=None):
         self.parent = parent
-        self.radius = radius
+        # Use default if radius is None
+        from constants import DEFAULT_RADIUS
+        self.radius = radius if radius is not None else DEFAULT_RADIUS
         self.center = center
         self.direction = 1
         self.holes = holes if holes is not None else []
