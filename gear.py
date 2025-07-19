@@ -5,7 +5,7 @@
 from utils import *
 import math
 
-
+class Hole:
     """
     Represents a hole in a gear where the drawing utensil can be inserted.
     Pure logic only; no drawing code.
@@ -34,7 +34,7 @@ import math
             if len(self.points) > 500:
                 self.points.pop(0)
 
-
+class SpiroGear:
     """
     Represents a spirograph gear that can contain multiple holes.
     Pure logic only; no drawing code.

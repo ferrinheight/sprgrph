@@ -9,9 +9,7 @@ import gear
 
 
 
-class Button:
-    pass  # UI logic removed; placeholder for compatibility if needed
-
+class SpiroGuide:
     """
     Pure logic for spirograph simulation, gear management, and speed control.
     No drawing or UI code.
