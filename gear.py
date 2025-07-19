@@ -66,3 +66,35 @@ class SpiroGear:
         for hole in self.holes:
             hole.rotate(old_center)
 
+
+# --- Code below added from older base dir gear.py for reference ---
+# The following methods/attributes are from the older version and may be useful for alternative implementations or reference.
+
+    # Added from older version: clear method
+    def clear(self):
+        while len(self.holes) > 0:
+            self.holes[-1].points = []
+            self.holes.pop(-1)
+
+    # Added from older version: t attribute and alternative rotate method
+    # self.t = 0  # (add to __init__ if using this method)
+    # def rotate(self):
+    #     a_v = self.direction * (TANGENTIAL_SPEED / (self.radius*0.1))
+    #     self.center = rotate_point_in_circle(center=self.parent.center,
+    #                                          point=self.center,
+    #                                          angle_velocity=a_v)
+    #     self.t += TANGENTIAL_SPEED * 0.1
+    #     for hole in self.holes:
+    #         R, r = self.parent.radius, self.radius
+    #         t = self.t
+    #         x = (R - r) * math.cos(t) + hole.distance * math.cos(
+    #             ((R - r) / r) * t) + self.parent.center[0]
+    #         y = (R - r) * math.sin(t) - hole.distance * math.sin(
+    #             ((R - r) / r) * t) + self.parent.center[1]
+    #         hole.center = (x, y)
+    #         hole.points.append(hole.center)
+    #         if len(hole.points) > 2:
+    #             hole.points.pop(0)
+
+# --- End of code added from older base dir gear.py ---
+

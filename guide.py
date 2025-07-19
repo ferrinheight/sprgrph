@@ -1,3 +1,103 @@
+# --- Code below added from older base dir guide.py for reference ---
+# The following methods and logic are from the older version and may be useful for reference or alternative implementations.
+#
+#     def clear(self):
+#         self.graph_surface.fill((0, 0, 0, 0))
+#
+#     def remove_gear(self):
+#         self.clear()
+#         if len(self.gears) > 0:
+#             self.gears[-1].clear()
+#             self.gears.pop(-1)
+#
+#     def widget_show(self):
+#         self.widget_visible = True
+#
+#     def widget_hide(self):
+#         self.widget_visible = False
+#         self.add_gear(0, self.widget_value)
+#         self.widget_value = 1
+#
+#     def widget_plus_button_press(self):
+#         if self.widget_value < 10:
+#             self.widget_value += 1
+#
+#     def widget_minus_button_press(self):
+#         if self.widget_value > 1:
+#             self.widget_value -= 1
+#
+#     def add_gear(self, gear_radius, hole_count):
+#         if hole_count not in range(1, 11):
+#             hole_count = randint(0, 6)
+#         if gear_radius not in range(1, int(self.radius * 0.9)):
+#             gear_radius = randint(round(self.radius * 0.2), 
+#                                   round(self.radius * 0.8))
+#         gear_center = (self.center[0] - (self.radius - gear_radius), 
+#                        self.center[1])
+#         gear_center = rotate_point_in_circle(center = self.center,
+#                       point = gear_center, angle_velocity = randint(0, 360))
+#         g = gear.SpiroGear(self, radius = gear_radius, 
+#                           center = gear_center)
+#         g.add_random_holes(hole_count)
+#         self.gears.append(g)
+#         print('gear radius: {}'.format(gear_radius))
+#         print('gear center: {}'.format(self.gears[-1].center))
+#         print('gear holes: {}'.format(','.join(
+#               [str(h.center) for h in self.gears[-1].holes])))
+#
+#     def click(self, pos):
+#         #x, y = pos
+#         if self.widget_visible:
+#             buttons = self.widget_buttons
+#         else:
+#             buttons = self.buttons
+#         for button in buttons:
+#             if button.rect.collidepoint(*pos):
+#                 button.click()
+#
+#     def key_press(self, key):
+#         if key == pygame.K_UP:
+#             self.speed_change('up')
+#         if key == pygame.K_DOWN:
+#             self.speed_change('down')
+#
+#     def draw(self):
+#         self.surface.fill((0, 0, 0))
+#         font = pygame.font.Font(None, 36)
+#         if self.widget_visible:
+#             pygame.draw.rect(self.widget_surface, GREY, (350, 100, 150, 150))
+#             self.widget_buttons.draw(self.widget_surface)
+#             self.widget_surface.blit(font.render(str(self.widget_value),
+#                                      True, RED), (350, 150))
+#             self.surface.blit(self.widget_surface, (0, 0))
+#         else:
+#             if len(self.gears) > 0:
+#                 for gear in self.gears:
+#                     gear.draw(self.surface, self.graph_surface)
+#             self.surface.blit(self.graph_surface, (0, 0))
+#             pygame.draw.circle(self.surface, (255, 255, 255), self.center,
+#                                self.radius, 2)
+#             self.buttons.draw(self.surface)
+#             fps_info = font.render(f'FPS: {self.clock.get_fps()}',
+#                                    True, (255, 255, 255))
+#             self.surface.blit(fps_info, (5, 5))
+#         pygame.display.flip()
+#
+#     def update(self):
+#         # spin(move) gear(s) then draw
+#         for gear in self.gears:
+#             gear.rotate()
+#         self.draw()
+#         self.clock.tick(self.speed)
+#
+#     def speed_change(self, value):
+#         if value == 'up':
+#             self.speed += 10
+#         elif value == 'down':
+#             self.speed -= 10
+#         self.speed = max(1, min(1000, self.speed))
+#
+# --- End of code added from older base dir guide.py ---
 #!/usr/bin/env python
 #guide.py
 
