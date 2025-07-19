@@ -1,60 +1,20 @@
 #!/usr/bin/env python
-#main.py
-
-from constants import *
-from utils import *
-import pygame
-import math
-import gear
-import guide
-from random import randint
-
-# Initialize Pygame
-pygame.init()
-
+# main.py
 
 def main():
-    clock = pygame.time.Clock()
-    running = True
-    spiro = guide.SpiroGuide(WIDTH, HEIGHT, PADDING, RADIUS, 60, (CENTERX, CENTERY))
-    spiro.add_gear(0, 2)
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            else:
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    spiro.click(event.pos)
-                if event.type == pygame.KEYDOWN:
-                    spiro.key_press(event.key)
-
-        spiro.update()
-        clock.tick(spiro.speed)
-
-    pygame.quit()
+    """
+    Main entry point for the spirograph application.
+    By default, runs the Pygame GUI. Future: add browser (p5.js) mode.
+    """
+    from gui import run_gui
+    run_gui()
+    # Placeholder for browser version (p5.js)
+    # def run_browser():
+    #     pass
+    # To add: CLI argument to select mode
 
 if __name__ == "__main__":
     main()
 
 
-# --- Code below added from older base dir main.py for reference ---
-# The following main() implementation is from the older version and may be useful for reference or alternative logic.
 
-# def main():
-#     running = True
-#     spiro = guide.SpiroGuide(WIDTH, HEIGHT, PADDING, RADIUS, 60, (CENTERX, CENTERY))
-#     spiro.add_gear(0, 2)
-#     while running:
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 running = False
-#             else:
-#                 if event.type == pygame.MOUSEBUTTONDOWN:
-#                     spiro.click(event.pos)
-#                 if event.type == pygame.KEYDOWN:
-#                     spiro.key_press(event.key)
-#         spiro.update()
-#
-#     pygame.quit()
-
-# --- End of code added from older base dir main.py ---
