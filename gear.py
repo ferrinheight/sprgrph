@@ -15,24 +15,22 @@ class Hole:
         self.offset_radius = offset_radius
         self.offset_angle = offset_angle
         self.color = color if color is not None else random_color()
-        self.points = []
+        self.center = None
+        self.prev_center = None
         self.update_absolute_position()
 
     def rotate(self, local_angle_delta):
         self.offset_angle += local_angle_delta
-        self.update_absolute_position()
+        return self.update_absolute_position()
 
     def update_absolute_position(self):
         cx, cy = self.parent.center
         x = cx + self.offset_radius * math.cos(self.offset_angle)
         y = cy + self.offset_radius * math.sin(self.offset_angle)
+        prev = self.center
+        self.prev_center = prev if prev is not None else (x, y)
         self.center = (x, y)
-        if not self.points:
-            self.points = [self.center, self.center]
-        else:
-            self.points.append(self.center)
-            if len(self.points) > 500:
-                self.points.pop(0)
+        return self.prev_center, self.center
 
 class SpiroGear:
     """
@@ -65,7 +63,11 @@ class SpiroGear:
         guide_radius = self.parent.radius
         gear_radius = self.radius
         local_angle_delta = -angle_velocity * (guide_radius / gear_radius)
+        # Return a list of (prev, curr, color) for each hole
+        segments = []
         for hole in self.holes:
-            hole.rotate(local_angle_delta)
+            prev, curr = hole.rotate(local_angle_delta)
+            segments.append((prev, curr, hole.color))
+        return segments
 
 
