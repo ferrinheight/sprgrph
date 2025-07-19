@@ -54,20 +54,23 @@ class SpiroGuide:
     def add_gear(self, gear_radius, hole_count):
         """Add a new gear with the specified radius and number of holes."""
         if hole_count not in range(1, 11):
-            hole_count = randint(0, 6)
+            hole_count = 2
         if gear_radius not in range(1, int(self.radius * 0.9)):
-            gear_radius = randint(20, round(self.radius * 0.8))
+            gear_radius = int(self.radius * 0.2)
         gear_center = (self.center[0] - (self.radius - gear_radius), self.center[1])
         gear_center = rotate_point_in_circle(center=self.center, point=gear_center, angle_velocity=randint(0, 360))
-        self.gears.append(gear.SpiroGear(self, radius=gear_radius, center=gear_center))
-        self.gears[-1].add_random_holes(hole_count)
+        new_gear = gear.SpiroGear(self, radius=gear_radius, center=gear_center)
+        new_gear.add_random_holes(hole_count)
+        self.gears.append(new_gear)
 
 
     # All UI, drawing, and event handling removed. Only pure logic remains.
     def update(self):
         """Update the state of all gears (advance simulation by one step)."""
+        segments = []
         for gear in self.gears:
-            gear.rotate()
+            segments.extend(gear.rotate())
+        return segments
 
     def speed_change(self, value):
         """Change the speed of the guide's update loop (logic only)."""
