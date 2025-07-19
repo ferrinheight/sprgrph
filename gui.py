@@ -7,13 +7,13 @@ Imports pure logic from gear.py and guide.py.
 
 import pygame
 from guide import SpiroGuide
-from constants import WIDTH, HEIGHT, PADDING, RADIUS, CENTERX, CENTERY
+from constants import DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_PADDING, DEFAULT_RADIUS, DEFAULT_CENTERX, DEFAULT_CENTERY
 
 def run_gui():
     pygame.init()
     clock = pygame.time.Clock()
     running = True
-    spiro = SpiroGuide(WIDTH, HEIGHT, PADDING, RADIUS, 60, (CENTERX, CENTERY))
+    spiro = SpiroGuide(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_PADDING, DEFAULT_RADIUS, 60, (DEFAULT_CENTERX, DEFAULT_CENTERY))
     spiro.add_gear(0, 2)
     while running:
         for event in pygame.event.get():
