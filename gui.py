@@ -1,14 +1,15 @@
 #!/usr/bin/env python
+
 """
-gui.py - Pygame-based GUI for Spirograph
+gui.py - Pygame-based GUI frontend for use with the core Spirograph logic.
 Handles all drawing, event handling, and user interaction.
-Imports pure logic from gear.py and guide.py.
+Imports pure spirograph simulation logic from gear.py and guide.py(soon to be new single script!).
 """
 
 
 import pygame
 from guide import SpiroGuide
-from constants import DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_PADDING, DEFAULT_RADIUS, DEFAULT_CENTERX, DEFAULT_CENTERY, WHITE, BLUE, GREY, RED, GREEN, BLACK
+from constants import DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_PADDING, DEFAULT_RADIUS, DEFAULT_CENTERX, DEFAULT_CENTERY, WHITE, BLUE, GREY, RED, GREEN, BLACK, DARK_GREY
 from gui_buttons import UIButton
 
 def run_gui():
@@ -27,10 +28,26 @@ def run_gui():
         show_gear_config = True
         gear_radius_pct = 0.2
         gear_holes = 2
+    # Background color options: use only those from constants.py
+    bg_colors = [BLACK, WHITE, DARK_GREY, BLUE, GREY, RED, GREEN]
+    bg_color_idx = 0
+    def change_bg_color():
+        nonlocal bg_color_idx
+        bg_color_idx = (bg_color_idx + 1) % len(bg_colors)
+        draw_surface.fill(bg_colors[bg_color_idx])
+    def save_drawing():
+        import datetime
+        filename = f"spirograph_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+        pygame.image.save(draw_surface, filename)
+        print(f"Saved drawing to {filename}")
+    def clear_lines():
+        draw_surface.fill(bg_colors[bg_color_idx])
     buttons = [
         UIButton('Add Gear', 700, 10, 80, 30, open_gear_config, 16, WHITE, BLUE, GREY),
         UIButton('Remove Gear', 700, 50, 80, 30, spiro.remove_gear, 16, WHITE, BLUE, GREY),
-        UIButton('Clear', 700, 90, 80, 30, spiro.clear, 16, WHITE, BLUE, GREY)
+        UIButton('Clear', 700, 90, 80, 30, clear_lines, 16, WHITE, BLUE, GREY),
+        UIButton('Save', 10, DEFAULT_HEIGHT-40, 80, 30, save_drawing, 16, WHITE, (40,120,40), (20,60,20)),
+        UIButton('BG Color', DEFAULT_WIDTH-110, DEFAULT_HEIGHT-40, 100, 30, change_bg_color, 16, WHITE, (40,40,120), (20,20,60)),
     ]
     slider_rect = pygame.Rect(5, 40, 200, 20)
     slider_dragging = False
@@ -39,7 +56,7 @@ def run_gui():
         rel = max(0, min(1, rel))
         spiro.set_speed_from_slider(rel)
     draw_surface = pygame.Surface((DEFAULT_WIDTH, DEFAULT_HEIGHT))
-    draw_surface.fill((0, 0, 0))
+    draw_surface.fill(bg_colors[bg_color_idx])
     # Gear config widget UI state
     gear_slider_dragging = False
     hole_slider_dragging = False
@@ -113,6 +130,7 @@ def run_gui():
                     pygame.draw.line(draw_surface, color, prev, curr, 1)
         # Draw everything
         surface.blit(draw_surface, (0, 0))
+        # Draw overlay (gears/guides) only for display, not for saving
         for gear in spiro.gears:
             pygame.draw.circle(surface, (200, 200, 200), gear.center, gear.radius, 1)
             for hole in gear.holes:

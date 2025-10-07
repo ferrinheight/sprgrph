@@ -1,6 +1,9 @@
 #!/usr/bin/env python
-#gear.py
 
+"""
+gear.py - Contains classes and functions for gear management in the 
+spirograph simulation.
+"""
 
 from utils import *
 import math
