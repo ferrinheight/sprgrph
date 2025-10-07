@@ -1,14 +1,15 @@
 #!/usr/bin/env python
+
 """
-gui.py - Pygame-based GUI for Spirograph
+gui.py - Pygame-based GUI frontend for use with the core Spirograph logic.
 Handles all drawing, event handling, and user interaction.
-Imports pure logic from gear.py and guide.py.
+Imports pure spirograph simulation logic from gear.py and guide.py(soon to be new single script!).
 """
 
 
 import pygame
 from guide import SpiroGuide
-from constants import DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_PADDING, DEFAULT_RADIUS, DEFAULT_CENTERX, DEFAULT_CENTERY, WHITE, BLUE, GREY, RED, GREEN, BLACK
+from constants import DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_PADDING, DEFAULT_RADIUS, DEFAULT_CENTERX, DEFAULT_CENTERY, WHITE, BLUE, GREY, RED, GREEN, BLACK, DARK_GREY
 from gui_buttons import UIButton
 
 def run_gui():
@@ -27,9 +28,8 @@ def run_gui():
         show_gear_config = True
         gear_radius_pct = 0.2
         gear_holes = 2
-    # Background color options
-    bg_colors = [(0,0,0), (255,255,255), (30,30,30), (40,40,80), (200,200,200)]
-    bg_color_names = ['Black', 'White', 'Dark Gray', 'Blue Gray', 'Light Gray']
+    # Background color options: use only those from constants.py
+    bg_colors = [BLACK, WHITE, DARK_GREY, BLUE, GREY, RED, GREEN]
     bg_color_idx = 0
     def change_bg_color():
         nonlocal bg_color_idx

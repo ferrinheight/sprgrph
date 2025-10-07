@@ -1,6 +1,10 @@
 #!/usr/bin/env python
-#guide.py
 
+"""
+guide.py - Spirograph simulation logic and gear management.
+This module contains the core logic for the spirograph simulation,
+including gear management and speed control.
+"""
 
 from constants import *
 from utils import *

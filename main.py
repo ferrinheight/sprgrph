@@ -1,5 +1,9 @@
 #!/usr/bin/env python
-# main.py
+
+"""
+main.py - Main entry point for the spirograph application.
+By default, runs the Pygame GUI. Future: add browser (p5.js) mode.
+"""
 
 def main():
     """
