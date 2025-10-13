@@ -5,10 +5,15 @@ gear.py - Contains classes and functions for gear management in the
 spirograph simulation.
 """
 
-from utils import *
+try:
+    from utils import *
+    from constants import DEFAULT_RADIUS
+except:
+    from .utils import *
+    from .constants import DEFAULT_RADIUS
 import math
 
-class Hole:
+class GearHole:
     """
     Represents a hole in a gear where the drawing utensil can be inserted.
     Pure logic only; no drawing code.
@@ -42,7 +47,6 @@ class SpiroGear:
     """
     def __init__(self, parent, radius=10, center=(0, 0), holes=None):
         self.parent = parent
-        from constants import DEFAULT_RADIUS
         self.radius = radius if radius is not None else DEFAULT_RADIUS
         self.center = center
         self.direction = 1
@@ -50,9 +54,9 @@ class SpiroGear:
 
     def add_random_holes(self, count=1):
         for _ in range(count):
-            r = randint(int(0.2 * self.radius), int(0.9 * self.radius))
+            r = randint(int(0.01 * self.radius), int(0.99 * self.radius))
             theta = math.radians(randint(0, 359))
-            self.holes.append(Hole(self, offset_radius=r, offset_angle=theta))
+            self.holes.append(GearHole(self, offset_radius=r, offset_angle=theta))
 
     def add_holes(self, holes=None):
         if holes is None:
@@ -73,4 +77,6 @@ class SpiroGear:
             segments.append((prev, curr, hole.color))
         return segments
 
+    def draw(self):
+        pass
 

@@ -38,8 +38,14 @@ See `requirements.txt` for dependencies. Main requirements:
 
 
 ### Usage
-To run the Pygame GUI:
+Create and activate Python virtual env
+`python3(.x) -m venv path/to/your/env/`
+.. `python3.11 -m venv .venv/`
 
+Install required packages:
+`pip install -r requirements.txt`
+
+To run the Pygame GUI:
 ```bash
 python -m sprgrph.main
 ```

@@ -5,17 +5,18 @@ main.py - Main entry point for the spirograph application.
 By default, runs the Pygame GUI. Future: add browser (p5.js) mode.
 """
 
-def main():
-    """
-    Main entry point for the spirograph application.
-    By default, runs the Pygame GUI. Future: add browser (p5.js) mode.
-    """
+try:
     from gui import run_gui
-    run_gui()
-    # Placeholder for browser version (p5.js)
-    # def run_browser():
-    #     pass
-    # To add: CLI argument to select mode
+except:
+    from .gui import run_gui
+from traceback import format_exc
+
+def main():
+    try:
+        run_gui()
+    except:
+        print("Unable to start pygame gui")
+        print(format_exc())
 
 if __name__ == "__main__":
     main()
